@@ -1,6 +1,4 @@
-const Controller = require('./Controller')
-
-class errorController extends Controller {
+class errorController {
 
     pageNotFoundAction() {
         return 'Error 404!'

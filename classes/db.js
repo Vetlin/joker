@@ -1,35 +1,27 @@
-const mysql = require('mysql2');
+const mysql = require('mysql');
 
-const DB = class {
+class DB {
 
-    async connect() {
-        const db = mysql.createConnection({
+    constructor() {
+        this.db = mysql.createConnection({
             host: process.env.DB_HOST,
             user: process.env.DB_USER,
-            password: process.DB_PASS,
-            database: process.DB_NAME,
+            password: process.env.DB_PASS,
+            database: process.env.DB_NAME,
         });
-        this.db = db;
+        this.db.connect();
     }
 
     async query(sql, params = []) {
-        let res = await this.db.execute(sql, params);
-        return res[0];
+        return new Promise((resolve, reject) => {
+            this.db.query(sql, params, (error, results, fields) => {
+                if (error) reject(error);
+                resolve(results);
+            })
+        })
+        
     }
-
-    getDb() {
-        return this.db
-    }
-
+    
 }
 
-const db = new DB();
-db.connect();
-
-db.getDb().query('SELECT * FROM users', function(e, r, f) {
-    console.log(e)
-    console.log(r)
-    console.log(f)
-})
-
-module.exports = db
+module.exports = new DB()

@@ -1,9 +1,13 @@
-const routes = require('../config/routes');
+const routes = require('../config/route');
 
 class Router {
 
     constructor(routes) {
+
+        // Routes
         this.routes = routes
+
+        // Error routes
         this.routeNotFound = {
             'controller': 'error',
             'action': 'pageNotFound',
@@ -14,17 +18,14 @@ class Router {
         }
     }
 
-    run(url) {
-
-        let route = this.parseRoute(url)
-
-        let controller;
+    async run(url) {
+        
         try {
-            controller = require(`../controller/${route.controller}Controller`);
-            return controller[`${route.action}Action`]()
+            let route = this.parseRoute(url)
+            return await require(`../controller/${route.controller}Controller`)[`${route.action}Action`]();
         } catch (error) {
-            controller = require(`../controller/${this.serverError.controller}Controller`);
-            return controller[`${this.serverError.action}Action`]()
+            console.log(error)
+            return require(`../controller/${this.serverError.controller}Controller`)[`${this.serverError.action}Action`]();
         }
 
     }

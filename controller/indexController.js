@@ -1,9 +1,9 @@
-const Controller = require('./Controller')
+const user = require('../model/User')
 
-class indexController extends Controller {
+class indexController {
 
-    indexAction() {
-        return 'Index Action!'
+    async indexAction() {
+        return await user.getUsers()
     }
 
 }
